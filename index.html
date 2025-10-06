@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Random Contact or Telegram</title>
+  <script>
+    const numbers = [
+      "916001457348","917500231815","917794833630","916386869404","919059350404",
+      "917995464458","919088661716","916001181034","918602338025","919573042742",
+      "917026826511","919878024396","917735675321","918279640334","918573947336",
+      "919933207034","919805187784","918088547612","919742809745","919516683321"
+    ];
+
+    const TELEGRAM_URL = "https://t.me/comingLoots";
+    const THRESHOLD = 3; // आप इसे 3 से 4 बार क्लिक के लिए 3 या 4 सेट कर सकते हैं
+
+    // 1. Local Storage से क्लिक काउंट प्राप्त करें (अगर कोई नहीं है, तो 0)
+    let clickCount = parseInt(localStorage.getItem('linkClicks')) || 0;
+
+    // 2. क्लिक काउंट बढ़ाएँ
+    clickCount++;
+    localStorage.setItem('linkClicks', clickCount);
+
+    // 3. शर्त की जाँच करें
+    if (clickCount >= THRESHOLD) {
+      // अगर क्लिक काउंट दहलीज (threshold) तक पहुँच गया है, तो Telegram पर रीडायरेक्ट करें
+      window.location.replace(TELEGRAM_URL);
+      
+      // वैकल्पिक: एक बार जब Telegram खुल जाए, तो क्लिक काउंट को रीसेट कर दें 
+      // ताकि अगली बार यह फिर से WhatsApp नंबर से शुरू हो।
+      // localStorage.setItem('linkClicks', 0); 
+    } else {
+      // अगर दहलीज तक नहीं पहुँचा है, तो रैंडम WhatsApp नंबर पर रीडायरेक्ट करें
+      const pick = numbers[Math.floor(Math.random() * numbers.length)];
+      window.location.replace("https://wa.me/" + pick);
+    }
+  </script>
+</head>
+<body>
+  <p>Redirecting...</p>
+</body>
+</html>
