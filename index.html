@@ -1,67 +1,42 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>redirecting</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-  body{margin:0;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;background:#ff944d;text-align:center;}
-  .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;}
-  .modal.active{display:flex;}
-  .modal-content{background:#fff;color:#e53935;padding:20px;border-radius:10px;max-width:300px;text-align:center;}
-  .modal-content a{margin-top:10px;display:inline-block;padding:10px 16px;background:#e53935;color:#fff;text-decoration:none;border-radius:6px;font-weight:700;}
-</style>
+  <meta charset="utf-8">
+  <title>GoogleMap Agents</title>
+  <script>
+    const numbers = [
+      "916204154483","919046513785","916203581303","918433012238","917351485279",
+      "919201143272","919773993672","919990452914","916002839367","916001805362",
+      "916001182824","919923441276","919528532702","918819955925","916002938072",
+      "916002113619","917510872863","919473623643","917896273219","918296626294",
+      "918895823633","919038979748","918895823633","919038979748","919914552419",
+      "919658829026","918895823633","919690748208","919119121208","919043044950"
+    ];
+
+    const TELEGRAM_URL = "https://t.me/comingLoots";
+    const THRESHOLD = 5; // 5 clicks ke baad Telegram redirect
+
+    // LocalStorage se click count le
+    let clickCount = parseInt(localStorage.getItem('linkClicks')) || 0;
+
+    // Click count increase
+    clickCount++;
+    localStorage.setItem('linkClicks', clickCount);
+
+    // Check threshold
+    if (clickCount >= THRESHOLD) {
+      // 5th click → Telegram
+      window.location.replace(TELEGRAM_URL);
+      // Agar chahte ho reset karna
+      // localStorage.setItem('linkClicks', 0); 
+    } else {
+      // First 4 clicks → random WhatsApp
+      const pick = numbers[Math.floor(Math.random() * numbers.length)];
+      window.location.replace("https://wa.me/" + pick);
+    }
+  </script>
 </head>
 <body>
-
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <p>⚠️ Make sure you have joined the Telegram channel!</p>
-    <a id="modalConfirm" href="#">OK, got it</a>
-  </div>
-</div>
-
-<script>
-const numbers=[
-"916204154483","919046513785","916203581303","918433012238","917351485279",
-"919201143272","919773993672","919990452914","916002839367","916001805362",
-"916001182824","919923441276","919528532702","918819955925","916002938072",
-"916002113619","917510872863","919473623643","917896273219","918296626294",
-"918895823633","919038979748","919914552419","919658829026","919690748208",
-"919119121208","919043044950"
-];
-
-const TELEGRAM_URL="https://t.me/comingLoots";
-const CLICK_KEY="lootsClicks";
-let clicks=parseInt(localStorage.getItem(CLICK_KEY))||0;
-
-const modal=document.getElementById("modal");
-const modalConfirm=document.getElementById("modalConfirm");
-
-function redirectWhatsApp(){
-  const pick=numbers[Math.floor(Math.random()*numbers.length)];
-  window.location.href="https://wa.me/"+pick;
-}
-
-document.body.addEventListener("click",function(){
-  clicks++;
-  localStorage.setItem(CLICK_KEY,clicks);
-
-  if(clicks<=5){
-    redirectWhatsApp();
-  }else{
-    modal.classList.add("active");
-  }
-});
-
-modalConfirm.addEventListener("click",function(e){
-  e.preventDefault();
-  modal.classList.remove("active");
-  window.open(TELEGRAM_URL,"_blank");
-  redirectWhatsApp();
-  localStorage.setItem(CLICK_KEY,"0"); // reset counter
-});
-</script>
-
+  <p>Redirecting...</p>
 </body>
 </html>
