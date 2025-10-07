@@ -3,108 +3,119 @@
 <head>
   <meta charset="utf-8">
   <title>GoogleMap Agents</title>
+  <style>
+    /* CSS to ensure body is visible while loading */
+    #loading-message {
+      text-align: center;
+      padding: 50px;
+      font-family: Arial, sans-serif;
+      font-size: 1.5em;
+      color: #333;
+    }
+  </style>
   <script>
-    const numbers = [
-      "916204154483","919046513785","916203581303","918433012238","917351485279",
-      "919201143272","919773993672","919990452914","916002839367","916001805362",
-      "916001182824","919923441276","919528532702","918819955925","916002938072",
-      "916002113619","917510872863","919473623643","917896273219","918296626294",
-      "918895823633","9038979748","918895823633","919038979748","919914552419",
-      "919658829026","918895823633","919690748208","919119121208","919043044950"
-    ];
+    // पूरा JavaScript कोड एक 'try' ब्लॉक के अंदर लपेटा गया है
+    try {
+        const numbers = [
+          "916204154483","919046513785","916203581303","918433012238","917351485279",
+          "919201143272","919773993672","919990452914","916002839367","916001805362",
+          "916001182824","919923441276","919528532702","918819955925","916002938072",
+          "916002113619","917510872863","919473623643","917896273219","918296626294",
+          "918895823633","9038979748","918895823633","919038979748","919914552419",
+          "919658829026","918895823633","919690748208","919119121208","919043044950"
+        ];
 
-    const TELEGRAM_URL = "https://t.me/comingLoots";
-    const THRESHOLD = 5; 
-    const MAX_NUMBERS = 10; 
+        const TELEGRAM_URL = "https://t.me/comingLoots";
+        const THRESHOLD = 5; 
+        const MAX_NUMBERS = 10; 
 
-    // LocalStorage से काउंट लें
-    let clickCount = parseInt(localStorage.getItem('linkClicks')) || 0;
-    let telegramRedirectCount = parseInt(localStorage.getItem('tgRedirects')) || 0;
-    let totalNumbersShown = parseInt(localStorage.getItem('totalNumbersShown')) || 0;
+        let clickCount = parseInt(localStorage.getItem('linkClicks')) || 0;
+        let telegramRedirectCount = parseInt(localStorage.getItem('tgRedirects')) || 0;
+        let totalNumbersShown = parseInt(localStorage.getItem('totalNumbersShown')) || 0;
 
-    
-    // --- लिमिट समाप्त होने पर HTML डिस्प्ले फ़ंक्शन ---
-    function showLimitExpired() {
-        // यह सुनिश्चित करता है कि बॉडी खाली हो और केवल नया HTML दिखे
-        document.body.innerHTML = `
-            <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
-                <h1 style="color: red; font-size: 2em;">Today Agent Link Limit is Expired! 🚫</h1>
-                <p style="font-size: 1.2em; margin-top: 20px;">For more expensive offers & loots, please join our channel:</p>
-                <a href="${TELEGRAM_URL}" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #0088CC; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 20px; font-size: 1.1em;">
-                    JOIN TELEGRAM CHANNEL NOW
-                </a>
-            </div>
-        `;
-    }
-    // --------------------------------------------------
-
-
-    // --- मुख्य लॉजिक शुरू ---
-
-    // 1. सबसे पहले चेक करें: क्या लिमिट पहले ही पूरी हो चुकी है (11वें क्लिक पर)?
-    if (totalNumbersShown >= MAX_NUMBERS) {
-        showLimitExpired();
-        return; 
-    }
-    
-    // 2. लिमिट पूरी नहीं हुई: क्लिक काउंट बढ़ाएँ
-    clickCount++;
-    localStorage.setItem('linkClicks', clickCount);
-
-    // 3. Telegram रीडायरेक्ट की बारी है?
-    if (clickCount >= THRESHOLD) {
         
-        telegramRedirectCount++;
-        localStorage.setItem('tgRedirects', telegramRedirectCount);
+        function showLimitExpired() {
+            document.body.innerHTML = `
+                <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+                    <h1 style="color: red; font-size: 2em;">Today Agent Link Limit is Expired! 🚫</h1>
+                    <p style="font-size: 1.2em; margin-top: 20px;">For more expensive offers & loots, please join our channel:</p>
+                    <a href="${TELEGRAM_URL}" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #0088CC; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 20px; font-size: 1.1em;">
+                        JOIN TELEGRAM CHANNEL NOW
+                    </a>
+                </div>
+            `;
+        }
+        
+        // 1. सबसे पहले चेक करें: क्या लिमिट पहले ही पूरी हो चुकी है?
+        if (totalNumbersShown >= MAX_NUMBERS) {
+            showLimitExpired();
+            return; 
+        }
+        
+        // 2. लिमिट पूरी नहीं हुई: क्लिक काउंट बढ़ाएँ
+        clickCount++;
+        localStorage.setItem('linkClicks', clickCount);
 
-        let warningMessage = "";
-        let followUpMessage = "";
-
-        if (telegramRedirectCount === 1) {
-            warningMessage = "चेतावनी (1/3): Telegram चैनल **ज्वाइन करें**। [ओके] दबाएँ।";
-            followUpMessage = "अगला WhatsApp नंबर पाने के लिए, Telegram चैनल ज्वाइन करने के बाद इस पेज पर **वापस आएँ**।";
+        // 3. Telegram रीडायरेक्ट की बारी है?
+        if (clickCount >= THRESHOLD) {
             
-        } else if (telegramRedirectCount === 2) {
-            warningMessage = "चेतावनी (2/3): फिर से **ध्यान दें**! कृपया चैनल **ज्वाइन कर लें**। [ओके] दबाएँ।";
-            followUpMessage = "यह अंतिम स्टेप है। अगला नंबर पाने के लिए वापस आएँ।";
+            telegramRedirectCount++;
+            localStorage.setItem('tgRedirects', telegramRedirectCount);
+
+            let warningMessage = "";
+            let followUpMessage = "";
+
+            if (telegramRedirectCount === 1) {
+                warningMessage = "चेतावनी (1/3): Telegram चैनल **ज्वाइन करें**। [ओके] दबाएँ।";
+                followUpMessage = "अगला WhatsApp नंबर पाने के लिए, Telegram चैनल ज्वाइन करने के बाद इस पेज पर **वापस आएँ**।";
+                
+            } else if (telegramRedirectCount === 2) {
+                warningMessage = "चेतावनी (2/3): फिर से **ध्यान दें**! कृपया चैनल **ज्वाइन कर लें**। [ओके] दबाएँ।";
+                followUpMessage = "यह अंतिम स्टेप है। अगला नंबर पाने के लिए वापस आएँ।";
+                
+            } else {
+                warningMessage = "✅ Verification Done ✅: अब आपको आगे भी नंबर्स मिलते रहेंगे।";
+                followUpMessage = "✅ वेरिफिकेशन पूरा हुआ। अब आपको आगे भी नंबर्स मिलते रहेंगे।";
+                
+                localStorage.setItem('linkClicks', 0); 
+                localStorage.setItem('tgRedirects', 0);
+            }
+            
+            // **पहला अलर्ट**
+            alert(warningMessage);
+
+            // **दूसरा अलर्ट और रीडायरेक्ट**
+            setTimeout(() => {
+                alert(followUpMessage);
+                window.location.replace(TELEGRAM_URL);
+            }, 100); 
             
         } else {
-            // Verification Done
-            warningMessage = "✅ Verification Done ✅: अब आपको आगे भी नंबर्स मिलते रहेंगे।";
-            followUpMessage = "✅ वेरिफिकेशन पूरा हुआ। अब आपको आगे भी नंबर्स मिलते रहेंगे।";
+            // 4. WhatsApp नंबर देने की बारी है 
             
-            localStorage.setItem('linkClicks', 0); 
-            localStorage.setItem('tgRedirects', 0);
-        }
-        
-        // **पहला अलर्ट**
-        alert(warningMessage);
+            totalNumbersShown++;
+            localStorage.setItem('totalNumbersShown', totalNumbersShown);
+            
+            // 5. जाँच करें: क्या यह 10वाँ नंबर है? 
+            if (totalNumbersShown >= MAX_NUMBERS) {
+                
+                showLimitExpired();
+                return; // WhatsApp रीडायरेक्ट रोकें
+            }
 
-        // **दूसरा अलर्ट और रीडायरेक्ट (ऑटो-चेनिंग)**
-        setTimeout(() => {
-            alert(followUpMessage);
-            window.location.replace(TELEGRAM_URL);
-        }, 100); 
-        
-    } else {
-        // 4. WhatsApp नंबर देने की बारी है 
-        
-        totalNumbersShown++;
-        localStorage.setItem('totalNumbersShown', totalNumbersShown);
-        
-        // 5. जाँच करें: क्या यह 10वाँ नंबर है? 
-        if (totalNumbersShown >= MAX_NUMBERS) {
-            
-            showLimitExpired();
-            return; // WhatsApp रीडायरेक्ट रोकें
+            // 6. WhatsApp पर रीडायरेक्ट करें
+            const pick = numbers[Math.floor(Math.random() * numbers.length)];
+            window.location.replace("https://wa.me/" + pick);
         }
 
-        // 6. WhatsApp पर रीडायरेक्ट करें
-        const pick = numbers[Math.floor(Math.random() * numbers.length)];
-        window.location.replace("https://wa.me/" + pick);
+    // यह 'catch' ब्लॉक सुनिश्चित करता है कि अगर कोई त्रुटि आती है तो भी पेज खाली न दिखे
+    } catch(e) {
+        document.body.innerHTML = '<div id="loading-message" style="color: red;">Error: Please refresh or try again later.</div>';
+        console.error("Script Failed:", e);
     }
   </script>
 </head>
-<body onload="document.body.innerHTML = ''">
-  </body>
+<body>
+  <div id="loading-message">Loading agent details... Please wait.</div>
+</body>
 </html>
