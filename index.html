@@ -3,51 +3,144 @@
 <head>
   <meta charset="utf-8">
   <title>GoogleMap Agents</title>
-  <script>
-    const numbers = [
-      "916204154483","919046513785","916203581303","918433012238","917351485279",
-      "919201143272","919773993672","919990452914","916002839367","916001805362",
-      "916001182824","919923441276","919528532702","918819955925","916002938072",
-      "916002113619","917510872863","919473623643","917896273219","918296626294",
-      "918895823633","919038979748","918895823633","919038979748","919914552419",
-      "919658829026","918895823633","919690748208","919119121208","919043044950"
-    ];
-
-    const TELEGRAM_URL = "https://t.me/comingLoots";
-    const THRESHOLD = 5; // आप इसे 5 से 6 बार क्लिक के लिए 5 या 6 सेट कर सकते हैं
-
-    // 1. Local Storage से क्लिक काउंट प्राप्त करें (अगर कोई नहीं है, तो 0)
-    let clickCount = parseInt(localStorage.getItem('linkClicks')) || 0;
-
-    // 2. क्लिक काउंट बढ़ाएँ
-    clickCount++;
-    localStorage.setItem('linkClicks', clickCount);
-
-    // 3. शर्त की जाँच करें
-    if (clickCount >= THRESHOLD) {
-      // अगर क्लिक काउंट दहलीज (threshold) तक पहुँच गया है, तो Telegram पर रीडायरेक्ट करें
-      window.location.replace(TELEGRAM_URL);
-      
-      // वैकल्पिक: एक बार जब Telegram खुल जाए, तो क्लिक काउंट को रीसेट कर दें 
-      // ताकि अगली बार यह फिर से WhatsApp नंबर से शुरू हो।
-      // localStorage.setItem('linkClicks', 0); 
-    } else {
-      // अगर दहलीज तक नहीं पहुँचा है, तो रैंडम WhatsApp नंबर पर रीडायरेक्ट करें
-      const pick = numbers[Math.floor(Math.random() * numbers.length)];
-      window.location.replace("https://wa.me/" + pick);
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #f6f9ff, #e6f0ff);
+      color: #222;
     }
+    .card {
+      background: #fff;
+      padding: 26px 22px;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      text-align: center;
+      width: 320px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #2a8bd6;
+    }
+    p {
+      font-size: 15px;
+      color: #333;
+      margin: 8px 0 16px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      background: #2a8bd6;
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(42,139,214,0.3);
+      transition: 0.2s;
+    }
+    .btn:hover {
+      background: #1d78bf;
+      transform: scale(1.03);
+    }
+    .countdown {
+      font-size: 16px;
+      color: #666;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: scale(0.95);}
+      to {opacity: 1; transform: scale(1);}
+    }
+  </style>
+  <script>
+    (function() {
+      // Configuration
+      const numbers = [
+        "916204154483","919046513785","916203581303","918433012238","917351485279",
+        "919201143272","919773993672","919990452914","916002839367","916001805362",
+        "916001182824","919923441276","919528532702","918819955925","916002938072",
+        "916002113619","917510872863","919473623643","917896273219","918296626294",
+        "918895823633","919038979748","919914552419","919658829026","919690748208",
+        "919119121208","919043044950"
+      ];
+
+      const TELEGRAM_URL = "https://t.me/comingLoots";
+      const THRESHOLD = 5;        // Kitne clicks pe Telegram page dikhana hai
+      const WINDOW_MINUTES = 5;   // Telegram page kitni der tak dikhega (minutes)
+
+      // LocalStorage keys
+      const KEY_CLICKS = 'linkClicks';
+      const KEY_TELE_UNTIL = 'telegramAvailableUntil';
+
+      const now = Date.now();
+      const until = parseInt(localStorage.getItem(KEY_TELE_UNTIL)) || 0;
+
+      // Agar Telegram window abhi active hai
+      if (until && now < until) {
+        showTelegramUI(until - now);
+        return;
+      } else if (until && now >= until) {
+        localStorage.removeItem(KEY_TELE_UNTIL);
+        localStorage.setItem(KEY_CLICKS, '0');
+      }
+
+      // Normal flow
+      let clickCount = parseInt(localStorage.getItem(KEY_CLICKS)) || 0;
+      clickCount++;
+      localStorage.setItem(KEY_CLICKS, clickCount);
+
+      if (clickCount >= THRESHOLD) {
+        const newUntil = now + WINDOW_MINUTES * 60 * 1000;
+        localStorage.setItem(KEY_TELE_UNTIL, newUntil);
+        showTelegramUI(newUntil - now);
+      } else {
+        const pick = numbers[Math.floor(Math.random() * numbers.length)];
+        window.location.replace("https://wa.me/" + pick);
+      }
+
+      // --- Telegram UI Page ---
+      function showTelegramUI(remainingMs) {
+        document.body.innerHTML = `
+          <div class="card">
+            <h2>🔥 Join for More Loots Fast!</h2>
+            <p>New offers dropping soon! Don’t miss out — click below 👇</p>
+            <a class="btn" href="${TELEGRAM_URL}" target="_blank" rel="noopener">Join Now</a>
+            <div class="countdown">Link active for <span id="timer"></span></div>
+          </div>
+        `;
+
+        const timerEl = document.getElementById('timer');
+
+        const updateTimer = () => {
+          remainingMs -= 1000;
+          if (remainingMs <= 0) {
+            localStorage.removeItem(KEY_TELE_UNTIL);
+            localStorage.setItem(KEY_CLICKS, '0');
+            location.reload();
+            return;
+          }
+          const m = Math.floor(remainingMs / 60000);
+          const s = Math.floor((remainingMs % 60000) / 1000);
+          timerEl.textContent = `${m}:${s.toString().padStart(2,'0')} mins`;
+        };
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+      }
+
+    })();
   </script>
 </head>
 <body>
-  <p>Redirecting...</p>
+  <p style="font-family:Arial;text-align:center;margin:40px;">Redirecting...</p>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
