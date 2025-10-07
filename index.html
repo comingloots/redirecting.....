@@ -1,76 +1,25 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>redirecting</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      margin:0;
-      font-family:Arial,sans-serif;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      height:100vh;
-      background:#ff944d;
-      text-align:center;
-    }
-
-    .btn {
-      display:none;
-      padding:14px 22px;
-      border-radius:10px;
-      background:#00e676;
-      color:#fff;
-      font-weight:700;
-      text-decoration:none;
-      animation:pulse 1s infinite;
-    }
-    @keyframes pulse{
-      0%{box-shadow:0 0 0 0 rgba(0,230,118,0.4);}
-      70%{box-shadow:0 0 0 12px rgba(0,230,118,0);}
-      100%{box-shadow:0 0 0 0 rgba(0,230,118,0);}
-    }
-
-    .modal{
-      display:none;
-      position:fixed;
-      top:0;left:0;right:0;bottom:0;
-      background:rgba(0,0,0,0.6);
-      justify-content:center;
-      align-items:center;
-    }
-    .modal.active{display:flex;}
-    .modal-content{
-      background:#fff;
-      color:#e53935;
-      padding:20px;
-      border-radius:10px;
-      max-width:300px;
-      text-align:center;
-    }
-    .modal-content a{
-      margin-top:10px;
-      display:inline-block;
-      padding:10px 16px;
-      background:#e53935;
-      color:#fff;
-      text-decoration:none;
-      border-radius:6px;
-      font-weight:700;
-    }
-  </style>
+<meta charset="utf-8">
+<title>redirecting</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body{margin:0;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;background:#ff944d;text-align:center;}
+  .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;}
+  .modal.active{display:flex;}
+  .modal-content{background:#fff;color:#e53935;padding:20px;border-radius:10px;max-width:300px;text-align:center;}
+  .modal-content a{margin-top:10px;display:inline-block;padding:10px 16px;background:#e53935;color:#fff;text-decoration:none;border-radius:6px;font-weight:700;}
+</style>
 </head>
 <body>
 
-  <a id="joinBtn" class="btn" href="#">Number ready after join!</a>
-
-  <div id="modal" class="modal">
-    <div class="modal-content">
-      <p>⚠️ Make sure you have joined the Telegram channel!</p>
-      <a id="modalConfirm" href="#">OK, got it</a>
-    </div>
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <p>⚠️ Make sure you have joined the Telegram channel!</p>
+    <a id="modalConfirm" href="#">OK, got it</a>
   </div>
+</div>
 
 <script>
 const numbers=[
@@ -86,7 +35,6 @@ const TELEGRAM_URL="https://t.me/comingLoots";
 const CLICK_KEY="lootsClicks";
 let clicks=parseInt(localStorage.getItem(CLICK_KEY))||0;
 
-const joinBtn=document.getElementById("joinBtn");
 const modal=document.getElementById("modal");
 const modalConfirm=document.getElementById("modalConfirm");
 
@@ -95,21 +43,16 @@ function redirectWhatsApp(){
   window.location.href="https://wa.me/"+pick;
 }
 
-function handleClick(){
+document.body.addEventListener("click",function(){
   clicks++;
   localStorage.setItem(CLICK_KEY,clicks);
 
   if(clicks<=5){
     redirectWhatsApp();
-    return;
+  }else{
+    modal.classList.add("active");
   }
-
-  // 6th click → show modal + button
-  joinBtn.style.display="inline-block";
-  modal.classList.add("active");
-}
-
-document.body.addEventListener("click",handleClick);
+});
 
 modalConfirm.addEventListener("click",function(e){
   e.preventDefault();
