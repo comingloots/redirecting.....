@@ -94,7 +94,7 @@
 
   <div class="card">
     <h2>Want the number? 🥶🫢</h2>
-    <p>Click below. First 5 clicks will give random WhatsApp numbers, then unlock special flow.</p>
+    <p>Click below. First 5 clicks will give random WhatsApp numbers.</p>
     <a id="joinBtn" class="btn" href="#">Get Number</a>
   </div>
 
@@ -137,7 +137,7 @@
         return;
       }
 
-      // 5th click done, activate animation + modal
+      // 6th click onwards: activate animation + modal
       joinBtn.classList.add("ready");
       joinBtn.textContent = "Number ready after join!";
       modal.classList.add("active");
