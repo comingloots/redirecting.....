@@ -2,68 +2,84 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>GoogleMap Agents</title>
+  <title>Loots Redirect</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      margin: 0;
+      height: 100vh;
+      font-family: "Poppins", Arial, sans-serif;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      margin: 0;
-      background: linear-gradient(135deg, #f6f9ff, #e6f0ff);
-      color: #222;
+      background: linear-gradient(135deg, #ff4d4d, #ff944d);
+      color: #fff;
     }
+
     .card {
-      background: #fff;
-      padding: 26px 22px;
-      border-radius: 14px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      padding: 32px 26px;
+      border-radius: 16px;
       text-align: center;
-      width: 320px;
-      animation: fadeIn 0.5s ease-in-out;
+      width: 330px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+      animation: fadeIn 0.6s ease-in-out;
     }
+
     h2 {
-      font-size: 20px;
+      font-size: 22px;
+      font-weight: 700;
       margin-bottom: 10px;
-      color: #2a8bd6;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
+
     p {
       font-size: 15px;
-      color: #333;
-      margin: 8px 0 16px;
+      color: #fff;
+      opacity: 0.9;
+      margin: 6px 0 18px;
     }
+
     .btn {
       display: inline-block;
-      padding: 12px 18px;
+      padding: 14px 22px;
       border-radius: 10px;
+      background: #fff;
+      color: #e53935;
+      font-weight: 700;
       text-decoration: none;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      background: #2a8bd6;
-      color: #fff;
-      box-shadow: 0 3px 10px rgba(42,139,214,0.3);
-      transition: 0.2s;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 14px rgba(255,255,255,0.3);
+      animation: pulse 1.6s infinite;
+      transition: transform 0.2s;
     }
+
     .btn:hover {
-      background: #1d78bf;
-      transform: scale(1.03);
+      transform: scale(1.08);
     }
+
     .countdown {
-      font-size: 16px;
-      color: #666;
-      margin-top: 10px;
+      margin-top: 14px;
+      font-size: 15px;
+      color: #fff;
+      opacity: 0.8;
       font-weight: 600;
     }
+
     @keyframes fadeIn {
-      from {opacity: 0; transform: scale(0.95);}
-      to {opacity: 1; transform: scale(1);}
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.4); }
+      70% { box-shadow: 0 0 0 12px rgba(255,255,255,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
     }
   </style>
+
   <script>
     (function() {
-      // Configuration
       const numbers = [
         "916204154483","919046513785","916203581303","918433012238","917351485279",
         "919201143272","919773993672","919990452914","916002839367","916001805362",
@@ -74,17 +90,14 @@
       ];
 
       const TELEGRAM_URL = "https://t.me/comingLoots";
-      const THRESHOLD = 5;        // Kitne clicks pe Telegram page dikhana hai
-      const WINDOW_MINUTES = 5;   // Telegram page kitni der tak dikhega (minutes)
+      const THRESHOLD = 5;
+      const WINDOW_MINUTES = 5;
 
-      // LocalStorage keys
       const KEY_CLICKS = 'linkClicks';
       const KEY_TELE_UNTIL = 'telegramAvailableUntil';
-
       const now = Date.now();
       const until = parseInt(localStorage.getItem(KEY_TELE_UNTIL)) || 0;
 
-      // Agar Telegram window abhi active hai
       if (until && now < until) {
         showTelegramUI(until - now);
         return;
@@ -93,7 +106,6 @@
         localStorage.setItem(KEY_CLICKS, '0');
       }
 
-      // Normal flow
       let clickCount = parseInt(localStorage.getItem(KEY_CLICKS)) || 0;
       clickCount++;
       localStorage.setItem(KEY_CLICKS, clickCount);
@@ -107,25 +119,21 @@
         window.location.replace("https://wa.me/" + pick);
       }
 
-      // --- Telegram UI Page ---
       function showTelegramUI(remainingMs) {
         document.body.innerHTML = `
           <div class="card">
             <h2>🔥 Join for More Loots Fast!</h2>
-            <p>New offers dropping soon! Don’t miss out — click below 👇</p>
+            <p>Exclusive offers are waiting! Don’t miss out — click below 👇</p>
             <a class="btn" href="${TELEGRAM_URL}" target="_blank" rel="noopener">Join Now</a>
             <div class="countdown">Link active for <span id="timer"></span></div>
           </div>
         `;
 
         const timerEl = document.getElementById('timer');
-
         const updateTimer = () => {
           remainingMs -= 1000;
           if (remainingMs <= 0) {
-            localStorage.removeItem(KEY_TELE_UNTIL);
-            localStorage.setItem(KEY_CLICKS, '0');
-            location.reload();
+            showExpiredUI();
             return;
           }
           const m = Math.floor(remainingMs / 60000);
@@ -137,6 +145,21 @@
         setInterval(updateTimer, 1000);
       }
 
+      function showExpiredUI() {
+        localStorage.removeItem(KEY_TELE_UNTIL);
+        localStorage.setItem(KEY_CLICKS, '0');
+        document.body.innerHTML = `
+          <div class="card">
+            <h2>⏰ Time Expired!</h2>
+            <p>Your Telegram link has expired.<br>Click below to try again.</p>
+            <a id="retryBtn" class="btn" href="#">Try Again</a>
+          </div>
+        `;
+        document.getElementById('retryBtn').addEventListener('click', (e) => {
+          e.preventDefault();
+          location.reload();
+        });
+      }
     })();
   </script>
 </head>
