@@ -2,88 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Loots Redirect</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      font-family: "Poppins", Arial, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #ff4d4d, #ff944d);
-      color: #fff;
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(12px);
-      padding: 32px 26px;
-      border-radius: 16px;
-      text-align: center;
-      width: 330px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-      animation: fadeIn 0.6s ease-in-out;
-    }
-
-    h2 {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 10px;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    p {
-      font-size: 15px;
-      color: #fff;
-      opacity: 0.9;
-      margin: 6px 0 18px;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 14px 22px;
-      border-radius: 10px;
-      background: #fff;
-      color: #e53935;
-      font-weight: 700;
-      text-decoration: none;
-      letter-spacing: 0.5px;
-      box-shadow: 0 4px 14px rgba(255,255,255,0.3);
-      animation: pulse 1.6s infinite;
-      transition: transform 0.2s;
-    }
-
-    .btn:hover {
-      transform: scale(1.08);
-    }
-
-    .countdown {
-      margin-top: 14px;
-      font-size: 15px;
-      color: #fff;
-      opacity: 0.8;
-      font-weight: 600;
-    }
-
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(10px);}
-      to {opacity: 1; transform: translateY(0);}
-    }
-
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.4); }
-      70% { box-shadow: 0 0 0 12px rgba(255,255,255,0); }
-      100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
-    }
-  </style>
+  <title>redirecting</title>
 </head>
-
 <body>
-  <p style="font-family:Arial;text-align:center;margin:40px;">Redirecting...</p>
+  <p style="text-align:center; margin-top: 40px; font-family: Arial;">Redirecting...</p>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      console.log("Script started");
+
       const numbers = [
         "916204154483","919046513785","916203581303","918433012238","917351485279",
         "919201143272","919773993672","919990452914","916002839367","916001805362",
@@ -94,55 +21,64 @@
       ];
 
       const TELEGRAM_URL = "https://t.me/comingLoots";
-      const THRESHOLD = 5;       // 5 clicks ke baad Telegram page
-      const WINDOW_MINUTES = 5;  // 5 min tak link active
+      const THRESHOLD = 5;
+      const WINDOW_MINUTES = 5;
 
       const KEY_CLICKS = "linkClicks";
       const KEY_TELE_UNTIL = "telegramAvailableUntil";
 
       const now = Date.now();
       const until = parseInt(localStorage.getItem(KEY_TELE_UNTIL)) || 0;
+      console.log("now, until:", now, until);
 
       if (until && now < until) {
+        console.log("Inside active window, show Telegram UI");
         showTelegramUI(until - now);
         return;
       }
 
       if (until && now >= until) {
+        console.log("Window expired, resetting keys");
         localStorage.removeItem(KEY_TELE_UNTIL);
         localStorage.setItem(KEY_CLICKS, "0");
       }
 
       let clickCount = parseInt(localStorage.getItem(KEY_CLICKS)) || 0;
       clickCount++;
-      localStorage.setItem(KEY_CLICKS, clickCount);
+      localStorage.setItem(KEY_CLICKS, String(clickCount));
+      console.log("clickCount:", clickCount);
 
       if (clickCount >= THRESHOLD) {
         const newUntil = now + WINDOW_MINUTES * 60 * 1000;
-        localStorage.setItem(KEY_TELE_UNTIL, newUntil);
+        localStorage.setItem(KEY_TELE_UNTIL, String(newUntil));
+        console.log("Threshold reached, show Telegram UI");
         showTelegramUI(newUntil - now);
       } else {
         const pick = numbers[Math.floor(Math.random() * numbers.length)];
-        // Small delay to ensure mobile browsers handle redirect
+        console.log("Redirecting to WhatsApp:", pick);
+        // Use location.href instead of replace
         setTimeout(() => {
           window.location.href = "https://wa.me/" + pick;
-        }, 500);
+        }, 300); 
       }
 
       function showTelegramUI(remainingMs) {
+        console.log("Rendering Telegram UI");
         document.body.innerHTML = `
-          <div class="card">
+          <div style="text-align:center; margin: 80px; font-family: Arial;">
             <h2>🔥 Join for More Loots Fast!</h2>
-            <p>Exclusive offers are waiting! Don’t miss out — click below 👇</p>
-            <a class="btn" href="${TELEGRAM_URL}" target="_blank" rel="noopener">Join Now</a>
-            <div class="countdown">Link active for <span id="timer"></span></div>
+            <p>Exclusive offers waiting. Click below 👇</p>
+            <a id="joinBtn" href="${TELEGRAM_URL}" target="_blank">Join Now</a>
+            <div style="margin-top:16px;">Link active for <span id="timer"></span></div>
           </div>
         `;
+
         const timerEl = document.getElementById("timer");
         const interval = setInterval(() => {
           remainingMs -= 1000;
           if (remainingMs <= 0) {
             clearInterval(interval);
+            console.log("Timer expired, showing expired UI");
             showExpiredUI();
             return;
           }
@@ -153,16 +89,17 @@
       }
 
       function showExpiredUI() {
+        console.log("Rendering Expired UI");
         localStorage.removeItem(KEY_TELE_UNTIL);
         localStorage.setItem(KEY_CLICKS, "0");
         document.body.innerHTML = `
-          <div class="card">
+          <div style="text-align:center; margin: 80px; font-family: Arial;">
             <h2>⏰ Time Expired!</h2>
-            <p>Your Telegram link has expired.<br>Click below to try again.</p>
-            <a id="retryBtn" class="btn" href="#">Try Again</a>
+            <p>Telegram link expired.<br>Click to try again.</p>
+            <a id="retryBtn" href="#">Try Again</a>
           </div>
         `;
-        document.getElementById("retryBtn").addEventListener("click", (e) => {
+        document.getElementById("retryBtn").addEventListener("click", function(e) {
           e.preventDefault();
           location.reload();
         });
