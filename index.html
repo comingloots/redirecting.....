@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
     ];
 
     const TELEGRAM_URL = "https://t.me/+opFikXeh63YzYzll";
-    const THRESHOLD = 5;
-    const MAX_NUMBERS = 10;
+    const THRESHOLD = 4;
+    const MAX_NUMBERS = 8;
 
     let clickCount = parseInt(localStorage.getItem('linkClicks')) || 0;
     let telegramRedirectCount = parseInt(localStorage.getItem('tgRedirects')) || 0;
@@ -51,11 +51,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
       let followUpMessage = "";
 
       if (telegramRedirectCount === 1) {
-        warningMessage = "चेतावनी (1/3): Telegram चैनल **ज्वाइन करें**। [ओके] दबाएँ।";
+        warningMessage = "चेतावनी :: Telegram चैनल 'ज्वाइन करें' । [ओके] दबाएँ।";
         followUpMessage = "अगला WhatsApp नंबर पाने के लिए, Telegram चैनल ज्वाइन करने के बाद इस पेज पर **वापस आएँ**।";
-      } else if (telegramRedirectCount === 2) {
-        warningMessage = "चेतावनी (2/3): फिर से **ध्यान दें**! कृपया चैनल **ज्वाइन कर लें**। [ओके] दबाएँ।";
-        followUpMessage = "यह अंतिम स्टेप है। अगला नंबर पाने के लिए वापस आएँ।";
       } else {
         warningMessage = "✅ Verification Done ✅: अब आपको आगे भी नंबर्स मिलते रहेंगे।";
         followUpMessage = "✅ वेरिफिकेशन पूरा हुआ। अब आपको आगे भी नंबर्स मिलते रहेंगे।";
@@ -89,3 +86,4 @@ document.addEventListener('DOMContentLoaded', (event) => {
   }
 });
 </script>
+
