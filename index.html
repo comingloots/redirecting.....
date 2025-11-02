@@ -1,17 +1,18 @@
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', (event) => {
   try {
     const numbers = [
-      "OTE4MzI5Njc5OTI5","OTE3ODE4MDI2NjA1","OTE3MDYxMjE3MTM0",
-      "OTE5MDY0NTg3MDAz","OTE3NDE1MTk4NjA5","OTE5MDgxODM1Njc3",
-      "OTE5OTU3MzcyNzI1","OTE5NjMyMTYyNDA4","OTE2MjA0OTMyMDA4",
-      "OTE4NDA5NzQxNTIx","OTE5MDIzNTMxNDIy","OTE4ODczMTc2MDIw",
-      "OTE3NzU3MDgzMjA1","OTE3OTgzNjYyNTMy","OTE5OTg5NjM5MjE3",
-      "OTE2MjAwNDEwOTY4","OTE3OTg5MzkxNDE1","OTE5MTQ5Njk0MTI2",
-      "OTE2MzUzNDk4MDI2","OTE2MjgxODM5NTM4","OTE3NDM5MzE3NDM5",
-      "OTE5MjQzMzc4NjI3","OTE4ODIyMTk0NDI2","OTE5MTIxODkzOTY4",
-      "OTE5MjM5NDk4NjMw","OTE4OTg5NjE4OTA3","OTE2MzY5OTU2OTIx",
-      "OTE3NzI3ODc1ODIy","OTE4NzU0NTcxNjAy","OTE5MDIyMDk2MTIz"
+      "OTE4MzI5Njc5OTI5", "OTE3ODE4MDI2NjA1", "OTE3MDYxMjE3MTM0",
+      "OTE5MDY0NTg3MDAz", "OTE3NDE1MTk4NjA5", "OTE5MDgxODM1Njc3",
+      "OTE5OTU3MzcyNzI1", "OTE5NjMyMTYyNDA4", "OTE2MjA0OTMyMDA4",
+      "OTE4NDA5NzQxNTIx", "OTE5MDIzNTMxNDIy", "OTE4ODczMTc2MDIw",
+      "OTE3NzU3MDgzMjA1", "OTE3OTgzNjYyNTMy", "OTE5OTg5NjM5MjE3",
+      "OTE2MjAwNDEwOTY4", "OTE3OTg5MzkxNDE1", "OTE5MTQ5Njk0MTI2",
+      "OTE2MzUzNDk4MDI2", "OTE2MjgxODM5NTM4", "OTE3NDM5MzE3NDM5",
+      "OTE5MjQzMzc4NjI3", "OTE4ODIyMTk0NDI2", "OTE5MTIxODkzOTY4",
+      "OTE5MjM5NDk4NjMw", "OTE4OTg5NjE4OTA3", "OTE2MzY5OTU2OTIx",
+      "OTE3NzI3ODc1ODIy", "OTE4NzU0NTcxNjAy", "OTE5MDIyMDk2MTIz",
+      "OTE5NjMyMTYyNDA4", "OTE5OTg5NjM5MjE3"
     ];
 
     const TELEGRAM_URL = "https://t.me/+opFikXeh63YzYzll";
@@ -24,10 +25,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showLimitExpired() {
       document.body.innerHTML = `
-        <div style="text-align:center;padding:50px;font-family:Arial;">
-          <h1 style="color:red;">Limit Expired 🚫</h1>
-          <p>Join our Telegram channel for more offers:</p>
-          <a href="${TELEGRAM_URL}" target="_blank" style="background:#0088CC;color:white;padding:10px 20px;border-radius:6px;text-decoration:none;">JOIN TELEGRAM</a>
+        <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+          <h1 style="color: red; font-size: 2em;">Today Agent Link Limit is Expired! 🚫</h1>
+          <p style="font-size: 1.2em; margin-top: 20px;">For more expensive offers & loots, please join our channel:</p>
+          <a href="${TELEGRAM_URL}" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #0088CC; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 20px; font-size: 1.1em;">
+            JOIN TELEGRAM CHANNEL NOW
+          </a>
         </div>
       `;
     }
@@ -44,37 +47,36 @@ document.addEventListener('DOMContentLoaded', () => {
       telegramRedirectCount++;
       localStorage.setItem('tgRedirects', telegramRedirectCount);
 
-      alert("⚠️ Please join our Telegram channel first!");
-      window.location.href = TELEGRAM_URL;
-      localStorage.clear();
-      return;
+      let warningMessage = "";
+      let followUpMessage = "";
+
+      if (telegramRedirectCount === 1) {
+        warningMessage = "चेतावनी :: Telegram चैनल 'ज्वाइन करें' । [ओके] दबाएँ।";
+        followUpMessage = "अगला WhatsApp नंबर पाने के लिए, Telegram चैनल ज्वाइन करने के बाद इस पेज पर **वापस आएँ**।";
+      }
+
+      alert(warningMessage);
+      setTimeout(() => {
+        alert(followUpMessage);
+        window.location.replace(TELEGRAM_URL);
+      }, 100);
+
+    } else {
+      totalNumbersShown++;
+      localStorage.setItem('totalNumbersShown', totalNumbersShown);
+
+      if (totalNumbersShown >= MAX_NUMBERS) {
+        showLimitExpired();
+        return;
+      }
+
+      const pick = numbers[Math.floor(Math.random() * numbers.length)];
+      window.location.replace("https://wa.me/" + atob(pick));
     }
 
-    totalNumbersShown++;
-    localStorage.setItem('totalNumbersShown', totalNumbersShown);
-
-    const pick = numbers[Math.floor(Math.random() * numbers.length)];
-    let decoded = "";
-
-    try {
-      decoded = atob(pick).trim();
-    } catch {
-      alert("Decode error! Base64 string invalid.");
-      return;
-    }
-
-    // If number doesn't start with 91, fix it
-    if (!decoded.startsWith("91")) {
-      decoded = "91" + decoded.replace(/\D/g, "");
-    }
-
-    const finalURL = `https://wa.me/${decoded}`;
-    console.log("Redirecting to:", finalURL);
-    window.location.href = finalURL;
-
-  } catch (err) {
-    console.error("Error:", err);
-    document.body.innerHTML = '<div style="color:red;text-align:center;padding:50px;">Error: Please refresh.</div>';
+  } catch (e) {
+    document.body.innerHTML = '<div id="error-message" style="color: red; text-align: center; padding: 50px;">Error: Please refresh or try again later.</div>';
+    console.error("Script Failed:", e);
   }
 });
 </script>
