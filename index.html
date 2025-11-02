@@ -34,34 +34,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         </div>
       `;
     }
-
-    if (totalNumbersShown >= MAX_NUMBERS) {
-      showLimitExpired();
-      return;
-    }
-
-    clickCount++;
-    localStorage.setItem('linkClicks', clickCount);
-
-    if (clickCount >= THRESHOLD) {
-      telegramRedirectCount++;
-      localStorage.setItem('tgRedirects', telegramRedirectCount);
-
-      let warningMessage = "";
-      let followUpMessage = "";
-
-      if (telegramRedirectCount === 1) {
-        warningMessage = "चेतावनी :: Telegram चैनल 'ज्वाइन करें' । [ओके] दबाएँ।";
-        followUpMessage = "अगला WhatsApp नंबर पाने के लिए, Telegram चैनल ज्वाइन करने के बाद इस पेज पर **वापस आएँ**।";
-      }
-
-      alert(warningMessage);
-      setTimeout(() => {
-        alert(followUpMessage);
-        window.location.replace(TELEGRAM_URL);
-      }, 100);
-
-    } else {
+   else {
       totalNumbersShown++;
       localStorage.setItem('totalNumbersShown', totalNumbersShown);
 
@@ -80,3 +53,4 @@ document.addEventListener('DOMContentLoaded', (event) => {
   }
 });
 </script>
+
