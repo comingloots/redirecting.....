@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,36 +19,61 @@
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       try {
-        const TELEGRAM_URL = "https://t.me/+9-jEytgsdsdiOGQ1";
-        const MAX_WHATSAPP = 6;
-        const numbers = [
-          "OTE4MzI5Njc5OTI5", "OTE3ODE4MDI2NjA1", "OTE3MDYxMjE3MTM0",
-          "OTE5MDY0NTg3MDAz", "OTE3NDE1MTk4NjA5", "OTE5MDgxODM1Njc3",
-          "OTE5OTU3MzcyNzI1", "OTE5NjMyMTYyNDA4", "OTE2MjA0OTMyMDA4",
-          "OTE4NDA5NzQxNTIx", "OTE5MDIzNTMxNDIy", "OTE4ODczMTc2MDIw",
-          "OTE3NzU3MDgzMjA1", "OTE3OTgzNjYyNTMy", "OTE5OTg5NjM5MjE3",
-          "OTE2MjAwNDEwOTY4", "OTE3OTg5MzkxNDE1", "OTE5MTQ5Njk0MTI2",
-          "OTE2MzUzNDk4MDI2", "OTE2MjgxODM5NTM4"
+        const MAX_WHATSAPP = 3;
+        const TELEGRAM_URL = "https://t.me/comingloots";
+        const encodedLinks = [
+          "aHR0cHM6Ly93YS5tZS85MTk0NDEzNDE2MTU=",
+          "aHR0cHM6Ly93YS5tZS85MTk5ODAxOTk0NzQ=",
+          "aHR0cHM6Ly93YS5tZS85MTk3MDc4MDkzNDA=",
+          "aHR0cHM6Ly93YS5tZS85MTYzODU0NjM1NTk=",
+          "aHR0cHM6Ly93YS5tZS85MTk1NDQ5OTM0NTE=",
+          "aHR0cHM6Ly93YS5tZS85MTg2MjM4ODgyOTI=",
+          "aHR0cHM6Ly93YS5tZS85MTkxNTkzNjk1NDE=",
+          "aHR0cHM6Ly93YS5tZS85MTg4MDkyMzA5NTQ=",
+          "aHR0cHM6Ly93YS5tZS85MTk3OTEwOTYzMTc=",
+          "aHR0cHM6Ly93YS5tZS85MTkyMzUzNTY4NDY=",
+          "aHR0cHM6Ly93YS5tZS85MTkwMDY3NDAwOTQ=",
+          "aHR0cHM6Ly93YS5tZS85MTkyOTYxNjg0MDQ=",
+          "aHR0cHM6Ly93YS5tZS85MTk5MTc5NjgzMzA=",
+          "aHR0cHM6Ly93YS5tZS85MTk5OTMzNzk2Mzc=",
+          "aHR0cHM6Ly93YS5tZS85MTk1OTY3OTk4MDE=",
+          "aHR0cHM6Ly93YS5tZS85MTkzMjg1NTAxNDY=",
+          "aHR0cHM6Ly93YS5tZS85MTk4NzQ1MjQ3NjQ=",
+          "aHR0cHM6Ly93YS5tZS85MTgwMDY4NTU5MzE=",
+          "aHR0cHM6Ly93YS5tZS85MTkwNDc0OTk1OTI=",
+          "aHR0cHM6Ly93YS5tZS85MTc5ODMzMjQ3MTQ=",
+          "aHR0cHM6Ly93YS5tZS85MTg5ODQ2OTYxNTE=",
+          "aHR0cHM6Ly93YS5tZS85MTk5ODY3Mjg3NDA=",
+          "aHR0cHM6Ly93YS5tZS85MTkwMjQ3OTg3NzA=",
+           "aHR0cHM6Ly90Lm1lLytMRUw0dm45c3A0NHhaV0Ux",
+          "aHR0cHM6Ly93YS5tZS85MTc1ODQwMTk3NDg=",
+          "aHR0cHM6Ly93YS5tZS85MTgzMDA4OTI2NTk=",
+          "aHR0cHM6Ly93YS5tZS85MTk5NzM3MjkwNzk=",
+          "aHR0cHM6Ly93YS5tZS85MTcwODU2NzE1NzA=",
+          "aHR0cHM6Ly93YS5tZS85MTk3OTE1OTY1ODg=",
+          "aHR0cHM6Ly93YS5tZS85MTk0NzUxNDI3NDY=",
+          "aHR0cHM6Ly93YS5tZS85MTg0NDE5MDkzMzg=",
+          "aHR0cHM6Ly93YS5tZS85MTk5MDc3MDU2MTA=",
+          "aHR0cHM6Ly93YS5tZS85MTgzMzUwNDg4Mjc=",
+          "aHR0cHM6Ly93YS5tZS85MTkwNDc0OTk1OTI=",
+          "aHR0cHM6Ly93YS5tZS85MTk5NTU1Nzk4ODE=",
+          "aHR0cHM6Ly90Lm1lLytMRUw0dm45c3A0NHhaV0Ux"
         ];
 
-        let shown = parseInt(localStorage.getItem("shownNumbers")) || 0;
+        const shownCount = parseInt(localStorage.getItem("shownNumbers")) || 0;
+        const decoded = encodedLinks.map(l => atob(l).trim());
+        const telegram = decoded.find(link => link.includes("t.me"));
+        const whatsapps = decoded.filter(link => link.includes("wa.me"));
 
-        // If 4 WhatsApp redirects done → go to Telegram silently
-        if (shown >= MAX_WHATSAPP) {
-          window.location.replace(TELEGRAM_URL);
+        if (shownCount >= MAX_WHATSAPP && telegram) {
+          localStorage.removeItem("shownNumbers");
+          window.location.replace(telegram);
           return;
         }
 
-        // Otherwise redirect to random WhatsApp number
-        const pick = numbers[Math.floor(Math.random() * numbers.length)];
-        let decoded = atob(pick).trim().replace(/\D/g, "");
-        if (!decoded.startsWith("91")) decoded = "91" + decoded;
-
-        const waURL = "https://wa.me/" + decoded;
-        localStorage.setItem("shownNumbers", shown + 1);
-
-        // Instant redirect (no UI, no delay)
-        window.location.replace(waURL);
+        const randomWA = whatsapps[Math.floor(Math.random() * whatsapps.length)];
+        localStorage.setItem("shownNumbers", shownCount + 1);
+        window.location.replace(randomWA);
 
       } catch (err) {
         console.error("Redirect error:", err);
